@@ -1,0 +1,171 @@
+// =====================================================================
+// DBML (Database Markup Language) Schema - OLTP Logistics System
+// Compatible with dbdiagram.io / dbdocs.io
+// =====================================================================
+
+Table customer {
+  customer_id varchar(32) [primary key]
+  customer_name varchar(150) [not null]
+  customer_type varchar(10) [not null, note: 'B2B or B2C']
+  phone_number varchar(20) [not null]
+  email varchar(100)
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  is_deleted boolean [default: false]
+}
+
+Table location {
+  location_id varchar(32) [primary key]
+  city_name varchar(100) [not null]
+  province_name varchar(100) [not null]
+  postal_code varchar(10) [not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  is_deleted boolean [default: false]
+}
+
+Table service_type {
+  service_type_id varchar(32) [primary key]
+  service_name varchar(50) [not null, note: 'Reguler, Express, SameDay']
+  sla_days integer [not null]
+  base_rate numeric(12,2) [not null, note: 'Tarif dasar per KG']
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  is_deleted boolean [default: false]
+}
+
+Table hub {
+  hub_id varchar(32) [primary key]
+  hub_name varchar(100) [not null]
+  location_id varchar(32) [not null]
+  capacity_per_day integer [not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  is_deleted boolean [default: false]
+}
+
+Table courier {
+  courier_id varchar(32) [primary key]
+  courier_name varchar(150) [not null]
+  vehicle_type varchar(30) [not null, note: 'Motorcycle, Van, Truck']
+  hub_id varchar(32) [not null]
+  phone_number varchar(20) [not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  is_deleted boolean [default: false]
+}
+
+Table shipment {
+  receipt_number varchar(50) [primary key]
+  sender_customer_id varchar(32) [not null]
+  recipient_name varchar(150) [not null]
+  recipient_phone varchar(20) [not null]
+  recipient_address text [not null]
+  origin_location_id varchar(32) [not null]
+  destination_location_id varchar(32) [not null]
+  service_type_id varchar(32) [not null]
+  package_weight_kg numeric(8,2) [not null]
+  shipping_fee numeric(12,2) [not null]
+  estimated_cost numeric(12,2) [not null]
+  booking_timestamp timestamp [not null]
+  estimated_delivery_date timestamp [not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  is_deleted boolean [default: false]
+}
+
+Table shipment_status_log {
+  status_log_id bigint [primary key, increment]
+  receipt_number varchar(50) [not null]
+  hub_id varchar(32)
+  courier_id varchar(32)
+  status_code varchar(30) [not null, note: 'PICKUP, IN_TRANSIT, OUT_FOR_DELIVERY, DELIVERED, FAILED, RETURNED']
+  failure_reason varchar(100) [note: 'Alamat Salah, Penerima Tidak di Rumah, dll']
+  log_timestamp timestamp [default: `now()`]
+  notes text
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  is_deleted boolean [default: false]
+}
+
+Table claim {
+  claim_id varchar(32) [primary key]
+  receipt_number varchar(50) [not null, unique]
+  claim_date timestamp [not null]
+  claim_type varchar(20) [not null, note: 'LOST or DAMAGED']
+  claim_amount numeric(12,2) [not null]
+  claim_status varchar(20) [not null, note: 'SUBMITTED, INVESTIGATING, APPROVED, REJECTED']
+  resolution_notes text
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  is_deleted boolean [default: false]
+}
+
+// =====================================================================
+// Relationships (Foreign Keys)
+// =====================================================================
+
+Ref: hub.location_id > location.location_id
+Ref: courier.hub_id > hub.hub_id
+Ref: shipment.sender_customer_id > customer.customer_id
+Ref: shipment.origin_location_id > location.location_id
+Ref: shipment.destination_location_id > location.location_id
+Ref: shipment.service_type_id > service_type.service_type_id
+Ref: shipment_status_log.receipt_number > shipment.receipt_number
+Ref: shipment_status_log.hub_id > hub.hub_id
+Ref: shipment_status_log.courier_id > courier.courier_id
+Ref: claim.receipt_number - shipment.receipt_number
+
+// =====================================================================
+// Sample Records
+// =====================================================================
+
+Records customer(customer_id, customer_name, customer_type, phone_number, email, created_at, updated_at, is_deleted) {
+  'CUST-001', 'PT Maju Makmur Bersama', 'B2B', '081234567890', 'finance@majumakmur.co.id', '2026-01-10 09:00:00', '2026-01-10 09:00:00', false
+  'CUST-002', 'Budi Santoso', 'B2C', '085678901234', 'budi.santoso@gmail.com', '2026-01-12 11:30:00', '2026-01-12 11:30:00', false
+  'CUST-003', 'CV Berkah Elektronik', 'B2B', '081399887766', 'sales@berkahelektronik.com', '2026-01-15 14:20:00', '2026-01-15 14:20:00', false
+  'CUST-004', 'Siti Aminah', 'B2C', '087811223344', 'siti.aminah@yahoo.com', '2026-01-18 16:45:00', '2026-01-18 16:45:00', false
+}
+
+Records location(location_id, city_name, province_name, postal_code, created_at, updated_at, is_deleted) {
+  'LOC-JKT-01', 'Jakarta Barat', 'DKI Jakarta', '11460', '2026-01-01 00:00:00', '2026-01-01 00:00:00', false
+  'LOC-JKT-02', 'Jakarta Selatan', 'DKI Jakarta', '12190', '2026-01-01 00:00:00', '2026-01-01 00:00:00', false
+  'LOC-BDG-01', 'Bandung', 'Jawa Barat', '40115', '2026-01-01 00:00:00', '2026-01-01 00:00:00', false
+  'LOC-SBY-01', 'Surabaya', 'Jawa Timur', '60271', '2026-01-01 00:00:00', '2026-01-01 00:00:00', false
+}
+
+Records service_type(service_type_id, service_name, sla_days, base_rate, created_at, updated_at, is_deleted) {
+  'SRV-SD', 'SameDay', 1, 30000.00, '2026-01-01 00:00:00', '2026-01-01 00:00:00', false
+  'SRV-EXP', 'Express', 1, 20000.00, '2026-01-01 00:00:00', '2026-01-01 00:00:00', false
+  'SRV-REG', 'Reguler', 3, 10000.00, '2026-01-01 00:00:00', '2026-01-01 00:00:00', false
+}
+
+Records hub(hub_id, hub_name, location_id, capacity_per_day, created_at, updated_at, is_deleted) {
+  'HUB-JKT-W', 'Central Hub Jakarta Barat', 'LOC-JKT-01', 50000, '2026-01-01 00:00:00', '2026-01-01 00:00:00', false
+  'HUB-BDG-C', 'Sorting Hub Bandung Central', 'LOC-BDG-01', 30000, '2026-01-01 00:00:00', '2026-01-01 00:00:00', false
+  'HUB-SBY-E', 'Regional Gateway Surabaya', 'LOC-SBY-01', 40000, '2026-01-01 00:00:00', '2026-01-01 00:00:00', false
+}
+
+Records courier(courier_id, courier_name, vehicle_type, hub_id, phone_number, created_at, updated_at, is_deleted) {
+  'CR-001', 'Ahmad Ridwan', 'Motorcycle', 'HUB-JKT-W', '081298765432', '2026-01-05 08:00:00', '2026-01-05 08:00:00', false
+  'CR-002', 'Dedi Supriyadi', 'Van', 'HUB-JKT-W', '081387654321', '2026-01-05 08:00:00', '2026-01-05 08:00:00', false
+  'CR-003', 'Gilang Pratama', 'Motorcycle', 'HUB-BDG-C', '085712345678', '2026-01-06 08:00:00', '2026-01-06 08:00:00', false
+}
+
+Records shipment(receipt_number, sender_customer_id, recipient_name, recipient_phone, recipient_address, origin_location_id, destination_location_id, service_type_id, package_weight_kg, shipping_fee, estimated_cost, booking_timestamp, estimated_delivery_date, created_at, updated_at, is_deleted) {
+  'RESI-20260301-001', 'CUST-001', 'Dewi Lestari', '081211112222', 'Jl. Braga No. 10, Bandung', 'LOC-JKT-01', 'LOC-BDG-01', 'SRV-EXP', 2.50, 50000.00, 32000.00, '2026-03-01 08:30:00', '2026-03-02 18:00:00', '2026-03-01 08:30:00', '2026-03-01 08:30:00', false
+  'RESI-20260301-002', 'CUST-002', 'Hendra Gunawan', '081333334444', 'Jl. Tunjungan No. 45, Surabaya', 'LOC-JKT-01', 'LOC-SBY-01', 'SRV-REG', 1.00, 10000.00, 6500.00, '2026-03-01 09:15:00', '2026-03-04 18:00:00', '2026-03-01 09:15:00', '2026-03-01 09:15:00', false
+  'RESI-20260301-003', 'CUST-003', 'Toko Berkah Jaya', '081955556666', 'Jl. Sudirman No. 88, Jakarta Selatan', 'LOC-JKT-01', 'LOC-JKT-02', 'SRV-SD', 5.00, 150000.00, 95000.00, '2026-03-01 10:00:00', '2026-03-01 21:00:00', '2026-03-01 10:00:00', '2026-03-01 10:00:00', false
+}
+
+Records shipment_status_log(status_log_id, receipt_number, hub_id, courier_id, status_code, failure_reason, log_timestamp, notes, created_at, updated_at, is_deleted) {
+  1, 'RESI-20260301-001', 'HUB-JKT-W', 'CR-001', 'PICKUP', null, '2026-03-01 09:00:00', 'Paket dipickup dari pengirim', '2026-03-01 09:00:00', '2026-03-01 09:00:00', false
+  2, 'RESI-20260301-001', 'HUB-JKT-W', null, 'IN_TRANSIT', null, '2026-03-01 13:00:00', 'Tiba di Sorting Hub Jakarta', '2026-03-01 13:00:00', '2026-03-01 13:00:00', false
+  3, 'RESI-20260301-001', 'HUB-BDG-C', 'CR-003', 'OUT_FOR_DELIVERY', null, '2026-03-02 08:30:00', 'Dibawa kurir pengantar', '2026-03-02 08:30:00', '2026-03-02 08:30:00', false
+  4, 'RESI-20260301-001', 'HUB-BDG-C', 'CR-003', 'DELIVERED', null, '2026-03-02 14:15:00', 'Diterima oleh ybs', '2026-03-02 14:15:00', '2026-03-02 14:15:00', false
+  5, 'RESI-20260301-002', 'HUB-JKT-W', 'CR-002', 'FAILED', 'Alamat Tidak Ditemukan', '2026-03-02 16:00:00', 'Penerima tidak dapat dihubungi', '2026-03-02 16:00:00', '2026-03-02 16:00:00', false
+}
+
+Records claim(claim_id, receipt_number, claim_date, claim_type, claim_amount, claim_status, resolution_notes, created_at, updated_at, is_deleted) {
+  'CLM-2026-0001', 'RESI-20260301-002', '2026-03-03 10:00:00', 'LOST', 350000.00, 'INVESTIGATING', 'Dalam proses pelacakan di Gateway', '2026-03-03 10:00:00', '2026-03-03 10:00:00', false
+}
