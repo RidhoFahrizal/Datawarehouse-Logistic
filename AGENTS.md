@@ -64,5 +64,70 @@ constraint :
 2. Pembuatan ETL menggunakan APACHE HOP
 3. Hubungan dari OLAB harus disesuaikan dengan kebutuhan dari deskripsi project
 4. Skenario Transform harus kamu sesuaikan dengan Data yang kita miliki, Semakin banyak Transfrom semakin bagus. kamu harus mencatat berapa banyak transform yang bisa kita lakukan
-5. Setiap ada insight baru kamu harus catat di `/home/ridho-the-engineer/CyberNote/DataWarehouse/ProjectETL/plan`
 
+
+
+## GUI-ONLY Mode
+
+### Definisi
+Kata kunci `GUI-ONLY` menginstruksikan agent untuk memberikan seluruh panduan implementasi menggunakan Graphical User Interface (GUI) Apache Hop.
+
+### Aturan Utama
+1. Setiap panduan implementasi Apache Hop WAJIB menggunakan pendekatan GUI.
+2. Jelaskan tahapan secara berurutan berdasarkan interaksi pengguna dengan Apache Hop GUI.
+3. Jangan memberikan instruksi berbasis CLI, terminal, scripting, atau manipulasi file konfigurasi secara manual sebagai metode utama implementasi.
+4. Jangan hanya menjelaskan konsep atau logika pipeline. Pandu pengguna tentang bagaimana merealisasikan setiap langkah tersebut melalui GUI Apache Hop.
+5. Gunakan nama komponen, transformasi, entry, menu, tab, dan properti sesuai istilah yang tersedia di Apache Hop.
+6. Jika terdapat konfigurasi yang harus dilakukan, jelaskan lokasi pengaturannya, properti yang perlu diisi, dan nilai yang harus digunakan.
+7. Jika suatu operasi tidak dapat dilakukan melalui GUI Apache Hop, jelaskan keterbatasannya dan berikan alternatif yang paling sesuai. Jangan mengarang fitur atau menu.
+
+### Format Panduan Implementasi
+
+Setiap instruksi pembuatan atau modifikasi file Apache Hop, seperti `.hpl` (Pipeline) dan `.hwf` (Workflow), WAJIB mengikuti struktur berikut:
+
+1. **Tujuan**
+   - Jelaskan fungsi pipeline atau workflow yang akan dibuat.
+   - Jelaskan input, proses, dan output yang diharapkan.
+
+2. **Persiapan**
+   - Jelaskan koneksi database, file sumber, metadata, atau konfigurasi yang harus tersedia.
+
+3. **Tahapan Pembuatan melalui GUI**
+   - Jelaskan cara membuat file baru melalui Apache Hop GUI.
+   - Jelaskan transformasi atau workflow entry yang harus ditambahkan.
+   - Jelaskan cara menghubungkan setiap komponen.
+   - Jelaskan konfigurasi setiap komponen secara detail.
+   - Sertakan nama tab dan properti yang perlu diatur jika relevan.
+   - Jelaskan urutan pengerjaan hingga pipeline atau workflow selesai.
+
+4. **Visualisasi Alur**
+   - Berikan diagram ASCII yang menggambarkan hubungan antarkomponen.
+   - Pastikan diagram sesuai dengan implementasi yang dijelaskan.
+
+5. **Validasi dan Pengujian**
+   - Jelaskan cara menjalankan pipeline atau workflow melalui GUI.
+   - Jelaskan cara membaca log dan memeriksa hasil eksekusi.
+   - Tentukan kondisi yang menunjukkan proses berhasil atau gagal.
+
+6. **Hasil Akhir**
+   - Jelaskan output yang seharusnya dihasilkan.
+   - Sebutkan lokasi penyimpanan file `.hpl` atau `.hwf` jika relevan.
+
+### Contoh Interpretasi
+
+Jika pengguna meminta:
+
+"Buatkan panduan pembuatan `03_stg_unify_shipments.hpl` dengan mode `GUI-ONLY`."
+
+Agent WAJIB:
+- Menjelaskan cara membuat pipeline baru melalui Apache Hop GUI.
+- Menjelaskan cara menambahkan transformasi seperti `Table Input`, `Select Values`, `Append Streams`, atau transformasi lain yang memang dibutuhkan.
+- Menjelaskan konfigurasi setiap transformasi melalui jendela konfigurasi GUI.
+- Menjelaskan cara menghubungkan transformasi menggunakan hop.
+- Menjelaskan cara menjalankan dan memvalidasi pipeline.
+- Menjelaskan hasil yang diharapkan pada staging database.
+
+Agent TIDAK BOLEH hanya memberikan SQL, kode Python, konfigurasi XML, atau gambaran logika pipeline tanpa tahapan implementasi melalui GUI.
+
+### Prioritas
+Ketika kata kunci `GUI-ONLY` digunakan, aturan ini menjadi prioritas untuk seluruh panduan implementasi Apache Hop dalam respons tersebut.
