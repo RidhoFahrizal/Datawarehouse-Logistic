@@ -7,6 +7,7 @@ deskripsi project: `/home/ridho-the-engineer/CyberNote/DataWarehouse/ProjectETL/
 
 Data: data adalah hal - hal yang berhubungan dengan OLTP, ETL, Data Pipeline DAN OLAP. semua informasi mengenai data saya simmpan di : `/home/ridho-the-engineer/CyberNote/DataWarehouse/ProjectETL/data`
 
+Plan : `/home/ridho-the-engineer/CyberNote/DataWarehouse/ProjectETL/plan`
 
 Tahapan project:
 
@@ -50,7 +51,7 @@ Tahapan project:
 
 
 setiap penjelasan harus memiliki struktur:
-0. SELALU CHECK deskripsi Project, 
+0. SELALU CHECK deskripsi Project, dan Plan  
 1. Penjelasan berparagraf 
 2. Visualisasi CLI
 3. Penjelasan visualisasi
