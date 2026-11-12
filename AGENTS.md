@@ -6,6 +6,8 @@ deskripsi: aku sudah membuat OLTP dan OLAP. namun masih terdapat kesalahan. kamu
 
 deskripsi project: `/home/ridho-the-engineer/CyberNote/DataWarehouse/ProjectETL/Project.md` 
 
+Data: data adalah hal - hal yang berhubungan dengan OLTP, ETL, Data Pipeline DAN OLAP. semua informasi mengenai data saya simmpan di : `/home/ridho-the-engineer/CyberNote/DataWarehouse/ProjectETL/data`
+
 setiap penjelasan harus memiliki struktur:
 0. SELALU CHECK deskripsi Project, 
 1. Penjelasan berparagraf 
@@ -15,3 +17,9 @@ setiap penjelasan harus memiliki struktur:
 
 
 
+constraint : 
+1. Bagian data harus menjadi referensi utama dalam pembuatan data pipeline
+2. Pembuatan ETL menggunakan APACHE HOP
+3. Hubungan dari OLAB harus disesuaikan dengan kebutuhan dari deskripsi project
+4. Skenario Transform harus kamu sesuaikan dengan Data yang kita miliki, Semakin banyak Transfrom semakin bagus. kamu harus mencatat berapa banyak transform yang bisa kita lakukan
+5. Setiap ada insight baru kamu harus catat di `/home/ridho-the-engineer/CyberNote/DataWarehouse/ProjectETL/plan`
