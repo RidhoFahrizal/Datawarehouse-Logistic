@@ -21,6 +21,7 @@ Tahapan project:
    - Load data ke Data Warehouse.
    - Seluruh implementasi ETL wajib menggunakan Apache Hop.
 
+
 3. **Data Pipeline**
    - Merancang alur perpindahan data dari OLTP menuju Data Warehouse.
    - Memastikan dependensi dan urutan proses ETL.
